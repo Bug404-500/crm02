@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xxxx.crm.dao.SaleChanceDao">
+
+    <select id="selectList" parameterType="SaleChanceVo" resultType="SaleChance">
+        select t.*
+        from t_sale_chance t
+        <where>
+            <if test="createMan!=null and ''!=createMan">
+                and t.create_man like '%${createMan}%'
+            </if>
+            <if test="state!=null and ''!=state">
+                and t.state = #{state}
+            </if>
+        </where>
+    </select>
+
+    <insert id="insert" parameterType="SaleChance">
+            insert into t_sale_chance
+            (id,
+            chance_source,
+            customer_name,
+            cgjl,
+            overview,
+            link_man,
+            link_phone,
+            description,
+            create_man,
+            assign_man,
+            assign_time,
+            state,
+            dev_result,
+            is_valid,
+            create_date,
+            update_date)
+            values
+            (#{id},
+            #{chanceSource},
+            #{customerName},
+            #{cgjl},
+            #{overview},
+            #{linkMan},
+            #{linkPhone},
+            #{description},
+            #{createMan},
+            #{assignMan},
+            #{assignTime},
+            #{state},
+            #{devResult},
+            #{isValid},
+            #{createDate},
+            #{updateDate})
+    </insert>
+
+
+    <select id="selectSaleChanceInfoById" parameterType="String" resultType="SaleChance">
+        select t.*
+        from t_sale_chance t
+        where t.id = #{saleChanceId}
+    </select>
+
+    <update id="update" parameterType="SaleChance">
+        update t_sale_chance
+        <set>
+            <if test="chanceSource != null" >
+                chance_source = #{chanceSource,jdbcType=VARCHAR},
+            </if>
+            <if test="customerName != null" >
+                customer_name = #{customerName,jdbcType=VARCHAR},
+            </if>
+            <if test="cgjl != null" >
+                cgjl = #{cgjl,jdbcType=INTEGER},
+            </if>
+            <if test="overview != null" >
+                overview = #{overview,jdbcType=VARCHAR},
+            </if>
+            <if test="linkMan != null" >
+                link_man = #{linkMan,jdbcType=VARCHAR},
+            </if>
+            <if test="linkPhone != null" >
+                link_phone = #{linkPhone,jdbcType=VARCHAR},
+            </if>
+            <if test="description != null" >
+                description = #{description,jdbcType=VARCHAR},
+            </if>
+            <if test="createMan != null" >
+                create_man = #{createMan,jdbcType=VARCHAR},
+            </if>
+            <if test="state != null" >
+                state = #{state,jdbcType=INTEGER},
+            </if>
+            <if test="devResult != null" >
+                dev_result = #{devResult,jdbcType=INTEGER},
+            </if>
+            <if test="isValid != null" >
+                is_valid = #{isValid,jdbcType=INTEGER},
+            </if>
+            <if test="createDate != null" >
+                create_date = #{createDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateDate != null" >
+                update_date = #{updateDate,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+
+    <delete id="delete" parameterType="String">
+        delete from t_sale_chance
+        where id = #{ids}
+    </delete>
+
+
+    <delete id="deleteIds" parameterType="String">
+        delete from t_sale_chance
+        where id in
+        <foreach collection="array" open="(" close=")" item="i" separator=",">
+            #{i}
+        </foreach>
+    </delete>
+
+
+</mapper>

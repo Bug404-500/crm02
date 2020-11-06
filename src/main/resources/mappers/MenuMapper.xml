@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xxxx.crm.dao.MenuDao">
+
+    <resultMap id="selectListMap" type="Menu">
+        <id property="id" column="pId"/>
+        <result property="menuName" column="pMenuName"/>
+        <result property="pid" column="pPid"/>
+
+        <collection property="list" ofType="Menu" javaType="List">
+            <id property="id" column="sId"/>
+            <result property="menuName" column="sMenuName"/>
+            <result property="pid" column="sPid"/>
+        </collection>
+    </resultMap>
+    <select id="selectList" resultMap="selectListMap">
+        select t1.id as pId,
+                t1.menu_name as pMenuName,
+                t1.pid as pPid,
+                t2.id as sId,
+                t2.menu_name as sMenuName,
+                t2.pid as sPid
+        from r_menu t1
+        left join r_menu t2 on t1.id = t2.pid
+        where t1.pid = 0
+    </select>
+
+    <insert id="insert" parameterType="MenuVo">
+        insert into r_menu
+        (menu_name,
+        pid)
+        values
+        (#{menuName},
+        #{id})
+    </insert>
+
+
+    <update id="update" parameterType="MenuVo">
+        update r_menu
+        set menu_name = #{menuName}
+        where id = #{id}
+    </update>
+
+</mapper>

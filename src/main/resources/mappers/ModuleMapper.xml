@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xxxx.crm.dao.ModuleMapper">
+
+  <select id="selectModuleListById" parameterType="String" resultType="Module">
+      select rm.*
+      from r_user t
+      left join r_user_role rur on t.id = rur.user_id
+      left join r_role rr on rur.role_id = rr.id
+      left join r_role_menu rrm on rur.role_id = rrm.role_id
+      left join r_menu rm on rrm.menu_id = rm.id
+      where t.id = #{id}
+  </select>
+</mapper>

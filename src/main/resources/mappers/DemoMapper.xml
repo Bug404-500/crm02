@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xxxx.crm.dao.DemoDao">
+
+    <!--
+    resultMap 标签里的id 绑定 select 标签后面的resultMap
+    resultMap 标签里的type 绑定 返回list的泛型
+    property 绑定 Person 类里面的字段名
+    column 绑定 我们sql查出来的列名
+     -->
+    <resultMap id="selectListMap" type="Person">
+        <id property="personId" column="pId"/>
+        <result property="personName" column="pPersonName"/>
+
+        <!--ofType就是关联的list的泛型 javaType-->
+        <collection property="carList" ofType="Car" javaType="List">
+            <id property="carId" column="cId"/>
+            <result property="carName" column="cCarName"/>
+        </collection>
+    </resultMap>
+
+    <select id="selectList" resultMap="selectListMap">
+        select t1.id as pId,
+               t1.person_name as pPersonName,
+               t3.id as cId,
+               t3.car_name as cCarName
+        from d_person t1
+        left join d_person_car t2 on t1.id = t2.person_id
+        left join d_car t3 on t2.car_id = t3.id
+    </select>
+
+    <delete id="deleteUserRole" parameterType="String">
+        delete from r_user_role
+        where user_id = #{id}
+    </delete>
+
+    <!--TODO 注意 foreach 里 collection -->
+    <insert id="insertUserRole">
+        insert into r_user_role
+        (user_id, role_id)
+        values
+        <foreach collection="array" item="i" separator=",">
+            (#{userId},#{i})
+        </foreach>
+    </insert>
+
+    <delete id="deleteRoleMenu" parameterType="String">
+        delete from r_role_menu
+        where role_id = #{roleId}
+    </delete>
+
+    <!--TODO 注意 foreach 里 collection -->
+    <insert id="insertRoleMenu" parameterType="RoleMenu">
+        insert into r_role_menu
+        (role_id,
+        menu_id)
+        values
+        <foreach collection="list" item="i" separator=",">
+            (#{i.roleId},
+            #{i.menuId})
+        </foreach>
+    </insert>
+</mapper>
